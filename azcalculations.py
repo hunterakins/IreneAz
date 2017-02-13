@@ -8,10 +8,16 @@ import math
 import numpy as np
 import scipy.io.wavfile as wavfile
 import time
+''' How to use this script:
+Define azrecordings as a list of filenames that you want to analyze.
+Define azfilename as the name of the textfile that  will contain all your data.
 
+'''
 start = time.time()
 
+
 azrecordings = ["C:\Users\irene\Anaconda\AlignmentRecordings\RoundThree\\2mm.wav", "C:\Users\irene\Anaconda\AlignmentRecordings\RoundThree\\2p5mm.wav", "C:\Users\irene\Anaconda\AlignmentRecordings\RoundThree\\3mm.wav", "C:\Users\irene\Anaconda\AlignmentRecordings\RoundThree\\3p5mm.wav", "C:\Users\irene\Anaconda\AlignmentRecordings\RoundThree\\4mm.wav", "C:\Users\irene\Anaconda\AlignmentRecordings\RoundThree\\2mm.wav"];
+azfilename = "azrmsvalsthree"
 
 data = getdata("C:\Users\irene\Anaconda\AlignmentRecordings\RoundThree\\2mm.wav")
 
@@ -27,7 +33,7 @@ filenames = [0]*numsamples;
 for i in range(numsamples):
     filenames[i] = makemonos(azrecordings[i])
     
-data, avgvals = avgcalculator(filenames, "azrmsvalsthree")
+data, avgvals = avgcalculator(filenames, azfilename)
 
 latmixavg = [0]*5
 for i in range(5):

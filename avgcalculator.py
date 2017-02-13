@@ -1,13 +1,13 @@
 
 
 """
-Calculates rms values of wav files and stores them in a numpy array.
-First generates the filenames of original files.
-Includes commented out code that converted the original files from 24-bit to 32-bit. 
-Generates "newfilenames", the names of the 32-bit sound files.
-Computes rms values of the 32-bit sound files with rmscalc and getdata.
+Contains several functions: getdata, rmscalc, avgcalc, avgcalculator
 
-Want to add in code to compare frame by 
+getdata takes in a string that is the filename with its full path specified and outputs a numpy array containing the sound data
+rmscalc just calculates the rms of a given numpy array 
+avg calc calculates the mean of a given numpy array 
+avgcalculator integrates these three functions, its documentation is below.
+
 """
 
 import struct
@@ -20,7 +20,55 @@ import scipy.io.wavfile as wavfile
 #import soundfile as sf 
 import time
 
+
+	
+
+def getdata(filename):
+	rate, data = wavfile.read(filename)
+	return data
+
+
+def rmscalc(data):
+	squarevals = np.square(data)
+	meansq = np.mean(squarevals);
+	return m.sqrt(meansq)
+
+def avgcalc(data):
+    return np.mean(data);
+
+start = time.time()
+
+#take in list of lists of filenames (of 32 bit mono .wav files) and a filename for the outputted textfile of rms values 
+# each element in the list of filenames is a list of four files, the left channel, right channel, vertical and lateral mix of a given stereo file
+# the format of rmsvals is an n by 6 array, the first column is the rms value of the left channel, the second is that of the right,
+# the third is that of the vertical mix, and the fourth is that of the lateral mix , the fifth is the ratio left/right, and the sixth is the ratio lat/vert 
+
+
+def avgcalculator(filenames, textfilename): 
+    numfiles = len(filenames);
+    horz = len(filenames[0]);
+    print("numfiles is ")
+    print(numfiles)
+    print("Number of subfiles is ")
+    print(horz)
+    avgvals = np.zeros((numfiles, horz))
+    for i in range(numfiles):
+        for j in range(horz):
+            filename = filenames[i][j]
+            data = getdata(filename)
+            avgval = avgcalc(data)
+            avgvals[(i-1,j)] = avgval 
+    np.savetxt(textfilename, avgvals)
+    return data, avgvals 
+
+
+end = time.time()
+print("Total time elapsed = ")
+print(end-start)
+
+
 """
+Update 2/13: moved commented out code below down here, use in case accidentally take 24-bit recordings instead of 32.
 
 Most of the commented out code pertained to processing a specific set of recordings, which had to be converted from 24 to 32 bit and had specific names...
 filenames = [0]* 32
@@ -65,48 +113,4 @@ for i in range(1, len(filenames)):
 #	for j in range(4):
 #		changebitdepth(filenames[i][j])
 
-	
-
-def getdata(filename):
-	rate, data = wavfile.read(filename)
-	return data
-
-
-def rmscalc(data):
-	squarevals = np.square(data)
-	meansq = np.mean(squarevals);
-	return m.sqrt(meansq)
-
-def avgcalc(data):
-    return np.mean(data);
-
-start = time.time()
-
-#take in list of lists of filenames (as 32 bit mono .wav files) and a filename for the outputted textfile of rms values 
-# each element in the list of filenames is a list of four files, the left channel, right channel, vertical and lateral mix of a given stereo file
-# the format of rmsvals is an n by 6 array, the first column is the rms value of the left channel, the second is that of the right,
-# the third is that of the vertical mix, and the fourth is that of the lateral mix , the fifth is the ratio left/right, and the sixth is the ratio lat/vert 
-
-
-def avgcalculator(filenames, textfilename): 
-    numfiles = len(filenames);
-    horz = len(filenames[0]);
-    print("numfiles is ")
-    print(numfiles)
-    print("Number of subfiles is ")
-    print(horz)
-    avgvals = np.zeros((numfiles, horz))
-    for i in range(numfiles):
-        for j in range(horz):
-            filename = filenames[i][j]
-            data = getdata(filename)
-            avgval = avgcalc(data)
-            avgvals[(i-1,j)] = avgval 
-    np.savetxt(textfilename, avgvals)
-    return data, avgvals 
-
-
-end = time.time()
-print("Total time elapsed = ")
-print(end-start)
 

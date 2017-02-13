@@ -20,7 +20,50 @@ import scipy.io.wavfile as wavfile
 #import soundfile as sf 
 import time
 
+
+def getdata(filename):
+	rate, data = wavfile.read(filename)
+	return data
+
+
+def rmscalc(data):
+	squarevals = np.square(data)
+	meansq = np.mean(squarevals);
+	return m.sqrt(meansq)
+
+
+
+
+start = time.time()
+
+#take in list of lists of filenames (as 32 bit mono .wav files) and a filename for the outputted textfile of rms values 
+# each element in the list of filenames is a list of four files, the left channel, right channel, vertical and lateral mix of a given stereo file
+# the format of rmsvals is an n by 6 array, the first column is the rms value of the left channel, the second is that of the right,
+# the third is that of the vertical mix, and the fourth is that of the lateral mix , the fifth is the ratio left/right, and the sixth is the ratio lat/vert 
+
+
+def rmscalculator(filenames, textfilename): 
+    numfiles = len(filenames);
+    horz = len(filenames[0]);
+    print("numfiles is ")
+    print(numfiles)
+    print("Number of subfiles is ")
+    print(horz)
+    rmsvals = np.zeros((numfiles, horz))
+    for i in range(numfiles):
+        for j in range(horz):
+            filename = filenames[i][j]
+            data = getdata(filename)
+            rmsval = rmscalc(data)
+            rmsvals[(i-1,j)] = rmsval 
+    np.savetxt(textfilename, rmsvals)
+    return data, rmsvals 
+
+
+end = time.time()
+
 """
+Old code for use in case of accidentally recording 24 bit stuff
 
 Most of the commented out code pertained to processing a specific set of recordings, which had to be converted from 24 to 32 bit and had specific names...
 filenames = [0]* 32
@@ -67,46 +110,5 @@ for i in range(1, len(filenames)):
 
 	
 
-def getdata(filename):
-	rate, data = wavfile.read(filename)
-	return data
 
-
-def rmscalc(data):
-	squarevals = np.square(data)
-	meansq = np.mean(squarevals);
-	return m.sqrt(meansq)
-
-
-
-
-start = time.time()
-
-#take in list of lists of filenames (as 32 bit mono .wav files) and a filename for the outputted textfile of rms values 
-# each element in the list of filenames is a list of four files, the left channel, right channel, vertical and lateral mix of a given stereo file
-# the format of rmsvals is an n by 6 array, the first column is the rms value of the left channel, the second is that of the right,
-# the third is that of the vertical mix, and the fourth is that of the lateral mix , the fifth is the ratio left/right, and the sixth is the ratio lat/vert 
-
-
-def rmscalculator(filenames, textfilename): 
-    numfiles = len(filenames);
-    horz = len(filenames[0]);
-    print("numfiles is ")
-    print(numfiles)
-    print("Number of subfiles is ")
-    print(horz)
-    rmsvals = np.zeros((numfiles, horz))
-    for i in range(numfiles):
-        for j in range(horz):
-            filename = filenames[i][j]
-            data = getdata(filename)
-            rmsval = rmscalc(data)
-            rmsvals[(i-1,j)] = rmsval 
-    np.savetxt(textfilename, rmsvals)
-    return data, rmsvals 
-
-
-end = time.time()
-print("Total time elapsed = ")
-print(end-start)
 
