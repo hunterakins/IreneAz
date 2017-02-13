@@ -9,7 +9,7 @@ avg calc calculates the mean of a given numpy array
 avgcalculator integrates these three functions, its documentation is below.
 
 """
-
+from getmonos import makemonos
 import struct
 import math as m
 import wave
@@ -58,13 +58,28 @@ def avgcalculator(filenames, textfilename):
             data = getdata(filename)
             avgval = avgcalc(data)
             avgvals[(i-1,j)] = avgval 
-    np.savetxt(textfilename, avgvals)
+    np.savetxt(textfilename, avgvals, delimiter = ',')
     return data, avgvals 
 
 
+
+def AnalyzeData(azrecordings, azfilename):
+    numsamples = len(azrecordings);
+    filenames = [0]*numsamples;
+    for i in range(numsamples):
+        filenames[i] = makemonos(azrecordings[i])
+    data, avgvals = avgcalculator(filenames, azfilename)
+    latmixavg = [0]*5
+    for i in range(5):
+        latmixavg[i] = avgvals[i][3];
+    return
+
+
 end = time.time()
+
 print("Total time elapsed = ")
 print(end-start)
+
 
 
 """

@@ -1,6 +1,6 @@
 """ Takes in a single stereo wave file and creates four mono tracks: 
 Say the original file is called sample.wav ;
-It creates sampleleft.wav, sampleright.wav, samplevert.wav, samplelat.wav ;
+It creates sampleleft.wav, sampleright.wav, samplevert.wav, samplelat.wav in the folder of the original file ;
 """
 
 #from rmscalc import changebitdepth 
