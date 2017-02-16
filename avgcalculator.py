@@ -36,7 +36,6 @@ def rmscalc(data):
 def avgcalc(data):
     return np.mean(data);
 
-start = time.time()
 
 #take in list of lists of filenames (of 32 bit mono .wav files) and a filename for the outputted textfile of rms values 
 # each element in the list of filenames is a list of four files, the left channel, right channel, vertical and lateral mix of a given stereo file
@@ -47,19 +46,25 @@ start = time.time()
 def avgcalculator(filenames, textfilename): 
     numfiles = len(filenames);
     horz = len(filenames[0]);
+    avgname = 'avg' + textfilename
+    rmsname = 'rms' + textfilename
     print("numfiles is ")
     print(numfiles)
     print("Number of subfiles is ")
     print(horz)
     avgvals = np.zeros((numfiles, horz))
+    rmsvals = np.zeros((numfiles, horz))
     for i in range(numfiles):
         for j in range(horz):
             filename = filenames[i][j]
             data = getdata(filename)
             avgval = avgcalc(data)
-            avgvals[(i-1,j)] = avgval 
-    np.savetxt(textfilename, avgvals, delimiter = ',')
-    return data, avgvals 
+            rmsval = rmscalc(data)
+            avgvals[(i-1,j)] = avgval
+            rmsvals[(i-1, j)] = rmsval
+    np.savetxt(avgname, avgvals, delimiter = ',', newline = '\n')
+    np.savetxt(rmsname, rmsvals, delimiter = ',', newline = '\n')
+    return data, avgvals, rmsvals 
 
 
 
@@ -68,17 +73,12 @@ def AnalyzeData(azrecordings, azfilename):
     filenames = [0]*numsamples;
     for i in range(numsamples):
         filenames[i] = makemonos(azrecordings[i])
-    data, avgvals = avgcalculator(filenames, azfilename)
+    data, avgvals, rmsvals = avgcalculator(filenames, azfilename)
     latmixavg = [0]*5
     for i in range(5):
         latmixavg[i] = avgvals[i][3];
-    return
+    return avgvals, rmsvals
 
-
-end = time.time()
-
-print("Total time elapsed = ")
-print(end-start)
 
 
 

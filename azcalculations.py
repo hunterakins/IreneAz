@@ -1,4 +1,5 @@
 from avgcalculator import avgcalculator, getdata, AnalyzeData
+from namemaker import makefilenames
 import struct
 import math as m
 import wave
@@ -14,12 +15,34 @@ Call the
 '''
 start = time.time()
 
-azrecordings = ["C:\Users\irene\Hunter\AlignmentRecordings\RoundThree\\2mm.wav", "C:\Users\irene\Hunter\AlignmentRecordings\RoundThree\\2p5mm.wav", "C:\Users\irene\Hunter\AlignmentRecordings\RoundThree\\3mm.wav", "C:\Users\irene\Hunter\AlignmentRecordings\RoundThree\\3p5mm.wav", "C:\Users\irene\Hunter\AlignmentRecordings\RoundThree\\4mm.wav", "C:\Users\irene\Hunter\AlignmentRecordings\RoundThree\\2mm.wav"];
-azfilename = "azrmsvalsthree.txt"
 
-AnalyzeData(azrecordings, azfilename)
+foldernames = ['5mm', '4mm', '3mm', '2mm', '1mm']
+letternames = ['A', 'B', 'C', 'D']
+numbers = ['1', '2', '3']
+basicpath = 'C:\\Users\\admin\\Documents\\UCB\\Irene\\RoundFour\\'
+extension = '.wav'
+
+filenames = makefilenames(foldernames, letternames, numbers,basicpath,extension)
+
+for i in range(len(filenames)):
+	azrecordings = filenames[i];
+	azfilename = foldernames[i] + '.txt'
+	avgvals, rmsvals = AnalyzeData(azrecordings, azfilename)
+	print("For ")
+	print(foldernames[i])
+	print(", the filenames are ")
+	print(filenames[i])
+	print(" and ")
+	print("avgvals are ")
+	print(avgvals)
+	print(" and rmsvals are ")
+	print(rmsvals)
+
 
 end = time.time() 
+
+print('Total time elapsed: ')
+print(end - start)
 
 '''
 def getratios(numpyarray):
