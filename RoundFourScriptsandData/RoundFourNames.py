@@ -8,3 +8,4 @@ extension = '.wav'
 
 filenames = makefilenames(foldernames, letternames, numbers, basicpath, extension)
 
+print(filenames)
