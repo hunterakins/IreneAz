@@ -24,6 +24,8 @@ extension = '.wav'
 
 filenames = makefilenames(foldernames, letternames, numbers,basicpath,extension)
 
+
+
 for i in range(len(filenames)):
 	azrecordings = filenames[i];
 	azfilename = foldernames[i] + '.txt'
