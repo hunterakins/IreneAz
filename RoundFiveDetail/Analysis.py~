@@ -1,0 +1,20 @@
+import DataPrograms as DP
+import scipy.io.wavfile as wavfile
+import numpy as np
+
+filenames = ["E1vert.wav", "E2vert.wav","E3vert.wav"]
+
+
+samplerate, E1 = wavfile.read(filenames[0])
+samples = np.size(E1)
+
+data = np.zeros((3,samples))
+data[0,:] = E1
+samplerate, data[1,:] = wavfile.read(filenames[1])
+samplerate, data[2,:] = wavfile.read(filenames[2])
+
+binmin = np.min(data)/2
+binmax = np.max(data)/2
+
+DP.HistoPlotter(data, 100, (binmin, binmax))
+

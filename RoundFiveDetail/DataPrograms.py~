@@ -1,0 +1,35 @@
+'''This script is designed to provide programs to enable the quick analysis of a particular data set.
+The set consists of 3 wav files. These wav files will be read with scipy module, then stored as rows in an array.
+I need a program to take in this data array and compute a histogram for each of these, with variable bin numbers.
+'''
+import numpy as np
+import scipy.io.wavfile as wavfile
+import time
+import matplotlib.pyplot as plt
+
+
+'''Note: bins is an integer, proportional to the resolution of the histo.
+binrange is a tuple that limits the values that the bins are created from'''
+
+def HistoPlotter(data, bins, binrange):
+    array1 = data[0,:]
+    array2 = data[1,:]
+    array3 = data[2,:]
+    histarray = np.zeros((3,bins))
+    binvals = np.zeros((3, bins+1))
+    for i in range(3):
+        histarray[i,:], binvals[i,:] = np.histogram(data[i,:], bins,range = binrange)
+    plt.figure()
+    print(np.shape(histarray))
+    print(np.shape(binvals[:,:-1]))
+    ax1 = plt.subplot(311)
+    ax2 = plt.subplot(312)
+    ax3 = plt.subplot(313)
+    ax1.scatter(binvals[0,:-1], histarray[0,:])
+    ax2.scatter(binvals[1,:-1], histarray[1,:])
+    ax3.scatter(binvals[2,:-1], histarray[2,:])
+    ax1.annotate(str(np.mean(array1)), xy = (binrange[0], 60000))
+    ax2.annotate(str(np.mean(array2)), xy = (binrange[0], 60000))
+    ax3.annotate(str(np.mean(array3)), xy = (binrange[0], 60000))
+    plt.show()
+    return histarray, binvals

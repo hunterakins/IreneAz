@@ -21,7 +21,8 @@ def Plotter(filename, title, xlabel, ylabel):
 	PartVals, NumRecordings, NumParts = GetData(filename)
 	domain = MakeDomain(NumRecordings)
 	legendhandles = [0]*NumParts
-	for i in range(NumParts):
+	#for i in range(NumParts):
+	for i in range(1):
 		dats = PartVals[:,i]
 		col = Colors[i]
 		lab = "Partition Number " + str(i + 1)
